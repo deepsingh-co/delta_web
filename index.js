@@ -3,29 +3,55 @@ import { faker } from '@faker-js/faker';
 
 
 
-const connection = await mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  database: 'delta_apps',
-  password: 'komal1432'
-});
-
-try {
-  connection.query("SHOW TABLES", (err, results) => {
-        if (err) throw err;
-        console.log(results);
+async function main() {
+  try {
+    const connection = await mysql.createConnection({
+      host: "localhost",
+      user: "root",
+      password: "komal1432",
+      database: "delta_apps"
     });
-} catch (err) {
-    console.error('Error executing query:', err);
+
+ // Function to generate random user data
+ 
+let getRandomUser = () => {
+  return [
+    faker.number.int({ min: 1, max: 100000 }),    
+    faker.internet.username(),
+    faker.internet.email(),
+    faker.internet.password()
+  ];
 };
 
-let getRandomUser = () => {
-  return {
-    Id: faker.string.uuid(),
-    username: faker.internet.username(),
-    email: faker.internet.email(),
-    password: faker.internet.password(),
+
+ // Insert a new user data in to mysql database
+    let query = "INSERT INTO user (id, username , email , password) VALUES ?";
+   
+    let data = [];
+    for (let i = 1; i <=100 ; i++) {
+      data.push(getRandomUser());
+    }
+   
+  
+   
+   
+   
+    //let users = [
+      //[ 124, "1423_newusfer" , "1235_newuser@example.com" , 'password5123'],
+      //[ 125 , "1293_newquser" , "1234_newuser@example.com", 'password1923'],
+    //];
+
     
-  };
+
+    const [result] = await connection.query(query ,[ data]);
+    console.log(result);
+
+    await connection.end();
+  } catch (err) {
+    console.error("Error executing query:", err);
+  }
 }
-console.log(getRandomUser());
+
+
+main();
+
