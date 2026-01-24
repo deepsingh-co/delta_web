@@ -84,10 +84,27 @@ async function main() {
   }
 });
 
-    //update route
-    app.patch("/user/:id" ,  (req, res) => {
-      res.send("Update user route");
-    });
+//update route
+app.patch("/user/:id" , async (req, res) => {
+  let { id } = req.params;
+  let {password: formPassword, username: newUsername } = req.body;
+  let query = "SELECT * FROM user WHERE id = ?";
+
+  try {
+    const [results] = await connection.query(query, [id]);
+    let user = results[0];
+    if (formPassword != user.password) {
+      return res.send("Password incorrect , cannot update username");
+    }else{
+      let query2 = "UPDATE user SET username = ? WHERE id = ?";
+      await connection.query(query2, [newUsername, id]);
+      res.redirect("/users");
+    }
+  } catch (err) {
+    console.error("Error executing query:", err);
+    res.send("Error executing DATABASE");
+  }
+});
 
 
     app.listen(8080, () => {
