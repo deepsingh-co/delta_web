@@ -122,16 +122,16 @@ app.patch("/user/:id" , async (req, res) => {
 main();
 
 
- // Function to generate random user data
+ //Function to generate random user data
  
-// let getRandomUser = () => {
-//   return [
-//     faker.number.int({ min: 1, max: 100000 }),    
-//     faker.internet.userName(),
-//     faker.internet.email(),
-//     faker.internet.password()
-//   ];
-// };
+let getRandomUser = () => {
+  return [
+    faker.number.int({ min: 1, max: 100000 }),    
+    faker.internet.userName(),
+    faker.internet.email(),
+    faker.internet.password()
+  ];
+};
 
 
  // Insert a new user data in to mysql database
